@@ -1,12 +1,39 @@
+#include <algorithm>
 #include "connectnboard.h"
 #include "connectn_AI.h"
 
-ConnectN_AI::ConnectN_AI(ConnectNBoard& b): board(b)
+namespace ConnectN
 {
-    
-}
 
-grid_size_t ConnectN_AI::move()
-{
-    return 0;
+    /**
+     * 
+     *
+     */
+    Solver::Solver(Board& b): board(b)
+    {
+    
+    }
+
+
+    /**
+     *  
+     *
+     */
+    grid_size_t Solver::move()
+    {
+        return 0;
+    }
+
+    /**
+     * 
+     *
+     */
+
+    // weight Solver::minmax(MMTree node, uint32_t depth, bool maximizing_player)
+    // {
+    //     if (depth == 0 || 
+    //         }
+
+    // }
+
 }

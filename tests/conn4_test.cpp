@@ -1,7 +1,10 @@
 #include <iostream>
 #include "connectnboard.h"
 
-void check_win(ConnectNBoard& board)
+using namespace ConnectN;
+
+
+void check_win(Board& board)
 {
     Player p = board.win();
     if (p != NONE)
@@ -13,7 +16,7 @@ void check_win(ConnectNBoard& board)
 
 int main()
 {
-    ConnectNBoard board;
+    Board board;
     std::cout << board;
     bool success = board.add_at(0);
     if (success)
@@ -50,6 +53,8 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
+
 
     success = board.add_at(2);
     if (success)
@@ -62,6 +67,8 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
+
     success = board.add_at(2);
     if (success)
     {
@@ -73,6 +80,7 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
 
     success = board.add_at(1);
     if (success)
@@ -85,6 +93,7 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
 
     success = board.add_at(2);
     if (success)
@@ -97,6 +106,7 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
 
     success = board.add_at(3);
     if (success)
@@ -109,6 +119,7 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
 
     success = board.add_at(3);
     if (success)
@@ -121,6 +132,8 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
+
     success = board.add_at(3);
     if (success)
     {
@@ -132,6 +145,7 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
 
     success = board.add_at(1);
     if (success)
@@ -144,6 +158,8 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
+
     success = board.add_at(0);
     if (success)
     {
@@ -155,6 +171,8 @@ int main()
         std::cout << "Could not add counter" << std::endl;
         return 0;
     }
+    board.switch_player();
+
     success = board.add_at(4);
     if (success)
     {

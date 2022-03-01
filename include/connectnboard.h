@@ -6,40 +6,43 @@
 #include <string>
 #include "boost/multi_array.hpp"
 
-enum Player {NONE, PLAYER1, PLAYER2, COMPUTER};
-
-typedef boost::multi_array<Player, 2> grid_t;
-typedef boost::multi_array_types::index grid_index;
-typedef boost::const_multi_array_ref<Player, 2, Player*>::size_type grid_size_t;
-
-std::string player_name(Player p);
-
-class ConnectNBoard
+namespace ConnectN
 {
-private:
-    grid_t grid;
-    uint8_t winning_count;
-    Player player;
-    bool useAI = false;
 
-    uint8_t height();
-    void fill(Player player);
-    Player scan_neighbors(grid_size_t row, grid_size_t column);
+    enum Player {NONE, PLAYER1, PLAYER2, COMPUTER};
 
-public:
-    ConnectNBoard();
-    ConnectNBoard(uint8_t gs, uint8_t wc, Player p);
-    ConnectNBoard(const ConnectNBoard& b);
+    typedef boost::multi_array<Player, 2> grid_t;
+    typedef boost::multi_array_types::index grid_index;
+    typedef boost::const_multi_array_ref<Player, 2, Player*>::size_type grid_size_t;
 
-    grid_size_t size();
-    bool add_at(uint8_t column);
-    void switch_player();
-    Player current_player() {return this->player;}
-    Player win();
+    std::string player_name(Player p);
 
-    friend std::ostream& operator<<(std::ostream& os, const ConnectNBoard& b);
-    friend class ConnectN_AI;
-};
+    class Board
+    {
+    private:
+        grid_t grid;
+        uint8_t winning_count;
+        Player player;
+        bool useAI = false;
 
+        uint8_t height();
+        void fill(Player player);
+        Player scan_neighbors(grid_size_t row, grid_size_t column);
+
+    public:
+        Board();
+        Board(uint8_t gs, uint8_t wc, Player p);
+        Board(const Board& b);
+
+        grid_size_t size();
+        bool add_at(uint8_t column);
+        void switch_player();
+        Player current_player() {return this->player;}
+        Player win();
+
+        friend std::ostream& operator<<(std::ostream& os, const Board& b);
+        friend class ConnectN_AI;
+    };
+}
 
 #endif

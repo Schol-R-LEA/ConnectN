@@ -4,19 +4,19 @@
 
 int main(int argc, char* argv[])
 {
-    grid_size_t board_size = 7, winning_count = 4;
-    Player p = PLAYER1;
+    ConnectN::grid_size_t board_size = 7, winning_count = 4;
+    ConnectN::Player p = ConnectN::PLAYER1;
 
     switch (argc)
     {
     case 4:
         if (std::stoi(argv[3]) == 2)
         {
-            p = PLAYER2;
+            p = ConnectN::PLAYER2;
         }
         if (std::stoi(argv[3]) == 3)
         {
-            p = COMPUTER;
+            p = ConnectN::COMPUTER;
         }
         [[fallthrough]];
     case 3:
@@ -29,15 +29,15 @@ int main(int argc, char* argv[])
         break;
     }
 
-    ConnectNBoard board(board_size, winning_count, p);
-    ConnectN_AI computer(board);
+    ConnectN::Board board(board_size, winning_count, p);
+    ConnectN::Solver computer(board);
 
-    Player winner = NONE;
+    ConnectN::Player winner = ConnectN::NONE;
     while(true)
     {
-        grid_size_t next_column = 0;
+        ConnectN::grid_size_t next_column = 0;
 
-        if (board.current_player() == COMPUTER)
+        if (board.current_player() == ConnectN::COMPUTER)
         {
             while (!board.add_at(computer.move()))
             {
@@ -47,16 +47,16 @@ int main(int argc, char* argv[])
         {
             do 
             {
-                std::cout << player_name(board.current_player()) << " enter a column: ";
+                std::cout << ConnectN::player_name(board.current_player()) << " enter a column: ";
                 std::cin >> next_column;
             } 
             while (!board.add_at(next_column));
         }
         std::cout << board;
         winner = board.win();
-        if (winner != NONE)
+        if (winner != ConnectN::NONE)
         {
-            std::cout << player_name(winner) << " wins!"<< std::endl;
+            std::cout << ConnectN::player_name(winner) << " wins!"<< std::endl;
             break;
         }
         board.switch_player();
