@@ -25,7 +25,7 @@ ConnectNBoard::ConnectNBoard(const ConnectNBoard& b): grid(boost::extents[b.grid
     }
 }
 
-grid_size_t ConnectNBoard::dim()
+grid_size_t ConnectNBoard::size()
 {
     return this->grid.size();
 }
@@ -63,14 +63,13 @@ void ConnectNBoard::switch_player()
 
 bool ConnectNBoard::add_at(uint8_t column)
 {
-    if (column < this->dim())
+    if (column < this->size())
     {
         for (grid_index row = 0; row < this->height()+1; row++)
         {
             if (this->grid[row][column] == NONE)
             {
                 this->grid[row][column] = this->player;
-                this->switch_player();
                 return true;
             }
         }
@@ -83,7 +82,7 @@ Player ConnectNBoard::win()
 {
     for (grid_size_t row = 0; row < this->height(); row++)
     {
-        for (grid_size_t column = 0; column < this->dim(); column++)
+        for (grid_size_t column = 0; column < this->size(); column++)
         {
             Player p = this->scan_neighbors(row, column);
             if (p != NONE)
@@ -105,10 +104,10 @@ Player ConnectNBoard::scan_neighbors(grid_size_t row, grid_size_t column)
         return NONE;
     }
 
-    bool check_up = (row <= (this->dim() - target)),
+    bool check_up = (row <= (this->size() - target)),
         check_down = (row >= target),
         check_left = (column >= target), 
-        check_right = (column <= (this->dim() - target));
+        check_right = (column <= (this->size() - target));
 
     if (check_up)
     {

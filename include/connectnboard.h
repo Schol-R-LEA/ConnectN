@@ -23,7 +23,6 @@ private:
 
     uint8_t height();
     void fill(Player player);
-    void switch_player();
     Player scan_neighbors(grid_size_t row, grid_size_t column);
 
 public:
@@ -31,8 +30,10 @@ public:
     ConnectNBoard(uint8_t gs, uint8_t wc, Player p);
     ConnectNBoard(const ConnectNBoard& b);
 
-    grid_size_t dim();
+    grid_size_t size();
     bool add_at(uint8_t column);
+    void switch_player();
+    Player current_player() {return this->player;}
     Player win();
 
     friend std::ostream& operator<<(std::ostream& os, const ConnectNBoard& b);
