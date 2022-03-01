@@ -1,5 +1,5 @@
-#ifndef __BOARD_H__
-#define __BOARD_H__ 1
+#ifndef __CONNECTNBOARD_H__
+#define __CONNECTNBOARD_H__ 1
 
 #include <algorithm>
 #include <iostream>
