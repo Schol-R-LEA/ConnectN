@@ -1,10 +1,7 @@
 #include <iostream>
 #include "connectnboard.h"
+#include "connectn_AI.h"
 
-
-/**
- * main driver
- */
 int main(int argc, char* argv[])
 {
     grid_size_t board_size = 7, winning_count = 4;
@@ -16,6 +13,10 @@ int main(int argc, char* argv[])
         if (std::stoi(argv[3]) == 2)
         {
             p = PLAYER2;
+        }
+        if (std::stoi(argv[3]) == 3)
+        {
+            p = COMPUTER;
         }
         [[fallthrough]];
     case 3:
@@ -29,19 +30,28 @@ int main(int argc, char* argv[])
     }
 
     ConnectNBoard board(board_size, winning_count, p);
-    std::cout << board;
+    ConnectN_AI computer(board);
 
     Player winner = NONE;
     while(true)
     {
         grid_size_t next_column = 0;
 
-        do 
+        if (board.current_player() == COMPUTER)
         {
-            std::cout << player_name(board.current_player()) << " enter a column: ";
-            std::cin >> next_column;
-        } 
-        while(!board.add_at(next_column));
+            while (!board.add_at(computer.move()))
+            {
+            }
+        }
+        else
+        {
+            do 
+            {
+                std::cout << player_name(board.current_player()) << " enter a column: ";
+                std::cin >> next_column;
+            } 
+            while (!board.add_at(next_column));
+        }
         std::cout << board;
         winner = board.win();
         if (winner != NONE)

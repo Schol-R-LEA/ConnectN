@@ -1,17 +1,39 @@
 #include <iostream>
 #include "connectnboard.h"
 
+/**
+ * 
+ *
+ */
+
+
+/**
+ * 
+ *
+ */
 ConnectNBoard::ConnectNBoard(): grid(boost::extents[7][7]), winning_count(4), player(PLAYER1)
 {
     // classic Connect-4 grid
+    useAI = true;
     this->fill(NONE);
 }
 
+
+/**
+ * 
+ *
+ */
 ConnectNBoard::ConnectNBoard(uint8_t gs, uint8_t wc, Player p): grid(boost::extents[gs][gs]), winning_count(std::min(gs, wc)), player(p)
 {
+    useAI = (this->player == COMPUTER);
     this->fill(NONE);
 }
 
+
+/**
+ * 
+ *
+ */
 ConnectNBoard::ConnectNBoard(const ConnectNBoard& b): grid(boost::extents[b.grid.size()][b.grid.size()]), 
                                                       winning_count(b.winning_count), 
                                                       player(b.player)
@@ -25,12 +47,21 @@ ConnectNBoard::ConnectNBoard(const ConnectNBoard& b): grid(boost::extents[b.grid
     }
 }
 
+
+/**
+ * 
+ *
+ */
 grid_size_t ConnectNBoard::size()
 {
     return this->grid.size();
 }
 
 
+/**
+ * 
+ *
+ */
 uint8_t ConnectNBoard::height()
 {
     uint8_t h = 0;
@@ -55,12 +86,25 @@ uint8_t ConnectNBoard::height()
     return h;
 }
 
+
+/**
+ * 
+ *
+ */
 void ConnectNBoard::switch_player()
 {
-    this->player = (this->player == PLAYER1) ? PLAYER2 : PLAYER1;
+    this->player = ((this->player == PLAYER1) 
+                    ? ((this->useAI) 
+                       ? COMPUTER 
+                       : PLAYER2)
+                    : PLAYER1);
 }
 
 
+/**
+ * 
+ *
+ */
 bool ConnectNBoard::add_at(uint8_t column)
 {
     if (column < this->size())
@@ -78,6 +122,10 @@ bool ConnectNBoard::add_at(uint8_t column)
 }
 
 
+/**
+ * 
+ *
+ */
 Player ConnectNBoard::win()
 {
     for (grid_size_t row = 0; row < this->height(); row++)
@@ -95,6 +143,10 @@ Player ConnectNBoard::win()
 }
 
 
+/**
+ * 
+ *
+ */
 Player ConnectNBoard::scan_neighbors(grid_size_t row, grid_size_t column)
 {
     Player p = this->grid[row][column];
@@ -203,6 +255,10 @@ Player ConnectNBoard::scan_neighbors(grid_size_t row, grid_size_t column)
 }
 
 
+/**
+ * 
+ *
+ */
 void ConnectNBoard::fill(Player player) 
 {
     for (grid_size_t i = 0; i < this->grid.size(); i++)
@@ -215,6 +271,10 @@ void ConnectNBoard::fill(Player player)
 }
 
 
+/**
+ * 
+ *
+ */
 std::ostream& operator<<(std::ostream& os, const ConnectNBoard& b)
 {
     std::string border;
@@ -228,9 +288,17 @@ std::ostream& operator<<(std::ostream& os, const ConnectNBoard& b)
             os << "|";
             switch (b.grid[r-1][c]) 
             {
-            case NONE: os << ' '; break; // no piece
-            case PLAYER1: os << 'O'; break; // player one's piece
-            case PLAYER2: os << 'X'; break; // player two's piece
+            case NONE: 
+                os << ' '; 
+                break; // no piece
+            case PLAYER1:
+                os << 'O'; 
+                break; // player one's piece
+            case PLAYER2:
+                [[fallthrough]];
+            case COMPUTER:
+                os << 'X'; 
+                break; // player two's or Computer's piece
             }
             if (c + 1 == b.grid.size()) { os << "|"; }
         }
@@ -242,7 +310,17 @@ std::ostream& operator<<(std::ostream& os, const ConnectNBoard& b)
 }
 
 
+/**
+ * 
+ *
+ */
 std::string player_name(Player p) 
 {
-    return ((p == NONE) ? "No one": ((p == PLAYER1) ? "Player one" : "Player two"));
+    return ((p == NONE) 
+            ? "No one"
+            : ((p == PLAYER1) 
+               ? "Player one" 
+               : ((p == PLAYER2) 
+                  ? "Player two" 
+                  : "Computer")));
 }

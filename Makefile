@@ -7,11 +7,14 @@ INC_OPTIONS=-Iinclude
 CC_OPTIONS=-Wall -Wextra -Werror -std=c++17 $(INC_OPTIONS)
 
 
-main: board
-	$(CC) $(CC_OPTIONS) $(SRC)/connect-four.cpp $(BIN)/connectnboard.o -o $(BIN)/connect-four
+main: board AI
+	$(CC) $(CC_OPTIONS) $(SRC)/connect-four.cpp $(BIN)/connectnboard.o $(BIN)/connectn_AI.o -o $(BIN)/connect-four
 
 board: 
 	$(CC) $(CC_OPTIONS) -c $(SRC)/connectnboard.cpp -o $(BIN)/connectnboard.o
+
+AI: board
+	$(CC) $(CC_OPTIONS) -c $(SRC)/connectn_AI.cpp -o $(BIN)/connectn_AI.o
 
 test: board
 	$(CC) $(CC_OPTIONS) $(TEST)/conn4_test.cpp $(BIN)/connectnboard.o -o $(BIN)/conn4_test

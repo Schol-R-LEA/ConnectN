@@ -6,7 +6,7 @@
 #include <string>
 #include "boost/multi_array.hpp"
 
-enum Player {NONE, PLAYER1, PLAYER2};
+enum Player {NONE, PLAYER1, PLAYER2, COMPUTER};
 
 typedef boost::multi_array<Player, 2> grid_t;
 typedef boost::multi_array_types::index grid_index;
@@ -20,6 +20,7 @@ private:
     grid_t grid;
     uint8_t winning_count;
     Player player;
+    bool useAI = false;
 
     uint8_t height();
     void fill(Player player);
@@ -37,6 +38,7 @@ public:
     Player win();
 
     friend std::ostream& operator<<(std::ostream& os, const ConnectNBoard& b);
+    friend class ConnectN_AI;
 };
 
 
