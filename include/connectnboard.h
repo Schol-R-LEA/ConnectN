@@ -34,6 +34,7 @@ namespace ConnectN
         Board(uint8_t gs, uint8_t wc, Player p);
         Board(const Board& b);
 
+        void operator=(const Board& b);
         grid_size_t size();
         bool add_at(uint8_t column);
         void switch_player();

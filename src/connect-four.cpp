@@ -6,9 +6,13 @@ int main(int argc, char* argv[])
 {
     ConnectN::grid_size_t board_size = 7, winning_count = 4;
     ConnectN::Player p = ConnectN::PLAYER1;
+    ConnectN::Depth depth = 5;
 
     switch (argc)
     {
+    case 5:
+        depth = std::stoi(argv[4]);
+        [[fallthrough]];
     case 4:
         if (std::stoi(argv[3]) == 2)
         {
@@ -30,7 +34,7 @@ int main(int argc, char* argv[])
     }
 
     ConnectN::Board board(board_size, winning_count, p);
-    ConnectN::Solver computer(board);
+    ConnectN::Solver computer(board, depth);
 
     ConnectN::Player winner = ConnectN::NONE;
     while(true)

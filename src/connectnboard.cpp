@@ -312,6 +312,20 @@ namespace ConnectN
         return os;
     }
 
+void Board::operator=(const Board& b)
+{
+    for (grid_size_t r = 0; r < b.grid.size(); r++)
+    {
+        for (grid_size_t c = 0; c < b.grid.size(); c++)
+        {
+            this->grid[r][c] = b.grid[r][c];
+        }
+    }
+    this->winning_count = b.winning_count;
+    this->player = b.player;
+    this->useAI = b.useAI;
+}
+
 
 /**
  * 
