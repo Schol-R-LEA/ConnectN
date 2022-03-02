@@ -3,16 +3,11 @@
 #include <string>
 #include "connectnboard.h"
 
-/**
- * 
- *
- */
+
 namespace ConnectN
 {
-
     /**
-     * 
-     *
+     * Board::Board() - default constructor
      */
     Board::Board(): grid(boost::extents[7][7]), winning_count(4), player(PLAYER1)
     {
@@ -23,8 +18,10 @@ namespace ConnectN
 
 
     /**
-     * 
-     *
+     * Board::Board(uint8_t gs, uint8_t wc, Player p) - standard c'tor
+     * @param gs - grid size
+     * @param wc - number of tokens need to win
+     * @param p  - first player 
      */
     Board::Board(uint8_t gs, uint8_t wc, Player p): grid(boost::extents[gs][gs]), winning_count(std::min(gs, wc)), player(p)
     {
@@ -33,10 +30,10 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * Board::Board(const Board& b) - copy c'tor 
+     * @param b - Board objects to copy
+     */
     Board::Board(const Board& b): grid(boost::extents[b.grid.size()][b.grid.size()]), 
                                                           winning_count(b.winning_count), 
                                                           player(b.player)
@@ -51,20 +48,18 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * grid_size_t Board::size() - dimensions of the board
+     */
     grid_size_t Board::size()
     {
         return this->grid.size();
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * uint8_t Board::height() - highest column on the board
+     */
     uint8_t Board::height()
     {
         uint8_t h = 0;
@@ -90,10 +85,9 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * void Board::switch_player() - change the current player
+     */
     void Board::switch_player()
     {
         this->player = ((this->player == PLAYER1) 
@@ -104,10 +98,10 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * bool Board::add_at(uint8_t column) - add a token to a column
+     * @param column - column to add the token to
+     */
     bool Board::add_at(uint8_t column)
     {
         if (column < this->size())
@@ -125,10 +119,9 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * Player Board::win() - return which player has won, if any
+     */
     Player Board::win()
     {
         for (grid_size_t row = 0; row < this->height(); row++)
@@ -146,10 +139,13 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * Player Board::scan_neighbors(grid_size_t row, grid_size_t column)
+     * - scan the neighboring square of a given square to see if there 
+     *   is a winning sequence.
+     * @param row    - row of square to scan from
+     * @param column - column of square to scan from
+     */
     Player Board::scan_neighbors(grid_size_t row, grid_size_t column)
     {
         Player p = this->grid[row][column];
@@ -258,10 +254,10 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * void Board::fill(Player player) - fill the board with a given value
+     * @param player - player calue to fill the board with
+     */
     void Board::fill(Player player) 
     {
         for (grid_size_t i = 0; i < this->grid.size(); i++)
@@ -274,10 +270,11 @@ namespace ConnectN
     }
 
 
-/**
- * 
- *
- */
+    /**
+     * std::ostream& operator<<(std::ostream& os, const Board& b)
+     * @param os - output stream to write to
+     * @param b - Board to print
+     */
     std::ostream& operator<<(std::ostream& os, const Board& b)
     {
         std::string border;
@@ -312,6 +309,11 @@ namespace ConnectN
         return os;
     }
 
+
+    /**
+     * void Board::operator=(const Board& b)
+     * @param b - Board to copy 
+     */
 void Board::operator=(const Board& b)
 {
     for (grid_size_t r = 0; r < b.grid.size(); r++)
@@ -327,10 +329,10 @@ void Board::operator=(const Board& b)
 }
 
 
-/**
- * 
- *
- */
+    /**
+     * std::string player_name(Player p) - map a Player value to a representative string
+     * @param p - Player value to map
+     */
     std::string player_name(Player p) 
     {
         return ((p == NONE) 
