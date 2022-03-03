@@ -30,7 +30,8 @@ namespace ConnectN
         Node negamax(Node node, Depth depth, Weight alpha, Weight beta, Weight color);
         std::vector<Node> enumerate_moves(Node node);
         void order_moves(std::vector<Node>& children);
-        Weight evaluate_move(Board& start, Board& moved);
+        Weight evaluate_move(Node& node);
+        Weight evaluate_column(Node& node);
 
     public:
         Solver(Board& b, Depth d);

@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 {
     ConnectN::grid_size_t board_size = 7, winning_count = 4;
     ConnectN::Player p = ConnectN::PLAYER1;
-    ConnectN::Depth depth = 5;
+    ConnectN::Depth depth = 1;
 
     switch (argc)
     {
@@ -34,6 +34,10 @@ int main(int argc, char* argv[])
     }
 
     ConnectN::Board board(board_size, winning_count, p);
+    if (p == ConnectN::COMPUTER)
+    {
+        board.switch_player();
+    }
     ConnectN::Solver computer(board, depth);
 
     ConnectN::Player winner = ConnectN::NONE;

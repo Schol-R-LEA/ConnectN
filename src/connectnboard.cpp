@@ -81,7 +81,7 @@ namespace ConnectN
                 break;
             }
         }
-        return h;
+        return std::min(h, static_cast<uint8_t>(this->size()));
     }
 
 
@@ -106,7 +106,7 @@ namespace ConnectN
     {
         if (column < this->size())
         {
-            for (grid_index row = 0; row < this->height()+1; row++)
+            for (grid_size_t row = 0; row < this->size(); row++)
             {
                 if (this->grid[row][column] == NONE)
                 {
@@ -155,10 +155,10 @@ namespace ConnectN
             return NONE;
         }
 
-        bool check_up = (row <= (this->size() - target)),
-            check_down = (row >= target),
-            check_left = (column >= target), 
-            check_right = (column <= (this->size() - target));
+        bool check_up = (row < (this->size() - target)),
+            check_down = (row > target),
+            check_left = (column > target-1), 
+            check_right = (column < (this->size() - target));
 
         if (check_up)
         {
@@ -194,7 +194,7 @@ namespace ConnectN
             if (check_up)
             {
                 for (grid_size_t r = row, c = column, count = 0; 
-                     (r < (row + target)) && (c > (column - offset)) && (this->grid[r][c] == p); 
+                     (r < (row + offset)) && (c >= (column - target)) && (this->grid[r][c] == p); 
                      r++, c--, count++)
                 {
                     if (count == target)
@@ -216,6 +216,7 @@ namespace ConnectN
                 }
             }
         }
+
         if (check_right)
         {
             for (grid_size_t c = column, count = 0; c < (column + offset) && (this->grid[row][c] == p); c++, count++)
@@ -225,6 +226,7 @@ namespace ConnectN
                     return p;
                 }
             }
+
             if (check_up)
             {
                 for (grid_size_t r = row, c = column, count = 0; 
@@ -237,6 +239,7 @@ namespace ConnectN
                     }
                 }
             }
+
             if (check_down)
             {      
                 for (grid_size_t r = row, c = column, count = 0; 
