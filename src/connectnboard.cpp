@@ -57,6 +57,22 @@ namespace ConnectN
     }
 
 
+ 
+    /**
+     * uint8_t Board::column_height() - highest column on the board
+     */
+    uint8_t Board::column_height(grid_size_t column)
+    {
+        grid_size_t row; 
+        for (row = 0; (row < this->size()) && (this->grid[row][column] != NONE); row++)
+        {
+            // iterate through
+        }
+
+        return row;
+    }
+
+
     /**
      * uint8_t Board::height() - highest column on the board
      */

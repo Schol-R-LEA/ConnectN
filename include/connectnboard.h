@@ -26,6 +26,7 @@ namespace ConnectN
         bool useAI = false;
 
         uint8_t height();
+        uint8_t column_height(grid_size_t column);
         void fill(Player player);
         Player scan_neighbors(grid_size_t row, grid_size_t column);
 
@@ -42,7 +43,7 @@ namespace ConnectN
         Player win();
 
         friend std::ostream& operator<<(std::ostream& os, const Board& b);
-        friend class ConnectN_AI;
+        friend class Solver;
     };
 }
 

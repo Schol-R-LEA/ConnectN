@@ -31,7 +31,8 @@ namespace ConnectN
         std::vector<Node> enumerate_moves(Node node);
         void order_moves(std::vector<Node>& children);
         Weight evaluate_move(Node& node);
-        Weight evaluate_column(Node& node);
+        Weight evaluate_node(Node& node);
+        Weight weight_column(grid_size_t c);
 
     public:
         Solver(Board& b, Depth d);

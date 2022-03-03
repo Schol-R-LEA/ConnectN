@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 {
     ConnectN::grid_size_t board_size = 7, winning_count = 4;
     ConnectN::Player p = ConnectN::PLAYER1;
-    ConnectN::Depth depth = 1;
+    ConnectN::Depth depth = 4;
 
     switch (argc)
     {
