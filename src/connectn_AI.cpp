@@ -55,20 +55,28 @@ namespace ConnectN
             return (Node {node.board, node.column, color * node.weight});
         }
         std::vector<Node> children = enumerate_moves(node);
-        order_moves(children);
 
+        order_moves(children);
         Node value = {node.board, node.column, neg_infinity};
+
         for (auto child : children)
         {
-            std::cout << "Weight " << child.weight << std::endl;
-
-            value.weight = std::max(value.weight, -(negamax(child, depth - 1, -beta, -alpha, -color)).weight);
+            Node recursive_value = negamax(child, depth - 1, -beta, -alpha, -color);
+            std::cout << "Current value " << value.weight << std::endl;
+            std::cout << "Recursive value " << recursive_value.weight << std::endl;
+            value.weight = std::max(value.weight, -recursive_value.weight);
+            if (value.weight == child.weight)
+            {
+                value.column = child.column;
+            }
             alpha = std::max(value.weight, alpha);
             if (alpha >= beta)
             {
                 break;
             }
         }
+        
+        std::cout << "Final column: " << value.column << " of weight: " << value.weight << std::endl;
         return value;
     }
 
@@ -180,105 +188,76 @@ namespace ConnectN
     {
         Weight weight = 0;        
         Player p = node.board.current_player();
-         grid_size_t size = node.board.size();    
+        grid_size_t size = node.board.size();    
         grid_size_t offset = node.board.winning_count, 
             target = static_cast<grid_size_t>(node.board.winning_count-1),
             row = node.board.column_height(node.column),
             column = node.column;
 
         bool check_up = (row < (size - target)),
-            check_down = (row > target),
             check_left = (column > target-1), 
             check_right = (column < (size - target));
 
-        if (check_up)
+        if (check_right)
         {
+            std::cout << "Right" << std::endl;
             grid_size_t count = 0;
-            for (grid_size_t r = row; (r < (row + offset)) && (node.board.grid[r][column] == p); r++, count++)
+            for (grid_size_t c = column, count = 0; c < std::min(size, column + offset) && (node.board.grid[row][c] == p); c++, count++)
             {
                 // iterate through
+                std::cout << c << " ";
             }
-            weight += weight_column(count);
+            if (count > 0)
+                std::cout << "Right Count:" << count << std::endl;
+            weight += weight_column(count); 
         }
 
-        if (check_down)
+        if (check_up)
         {
+            std::cout << "up" << std::endl;
             grid_size_t count = 0;
-            for (grid_size_t r = row; r < (row - offset + 1) && (node.board.grid[r][column] == p); r--, count++)
+            for (grid_size_t r = row; (r < std::min(size, row + offset)) && (node.board.grid[r][column] == p); r++, count++)
             {
                 // iterate through
+                std::cout << r << " ";
             }
+            if (count > 0)
+                std::cout << "Up Count: " << count << std::endl;
             weight += weight_column(count);
         }
 
         if (check_left)
         {
+            std::cout << "up left" << std::endl;
             grid_size_t count = 0;
-            for (grid_size_t c = column, count = 0; c > (column - offset) && (node.board.grid[row][c] == p); c--, count++)
+            for (grid_size_t r = row, c = column, count = 0; 
+                 (r < (row + offset)) && (c >= (column - target)) && (node.board.grid[r][c] == p); 
+                 r++, c--, count++)
             {
                 // iterate through
+                std::cout << "[ " << r << "," << c << "]";
             }
-            weight += weight_column(count); 
-
-
-            if (check_up)
-            {
-                grid_size_t count = 0;
-                for (grid_size_t r = row, c = column, count = 0; 
-                     (r < (row + offset)) && (c >= (column - target)) && (node.board.grid[r][c] == p); 
-                     r++, c--, count++)
-                {
-                    // iterate through
-                }
-                weight += weight_column(count);
-            }
-            if (check_down)
-            {
-                grid_size_t count = 0;
-                for (grid_size_t r = row, c = column, count = 0; 
-                     (r > (row - offset + 1)) && (c > (column - offset)) && (node.board.grid[r][c] == p); 
-                     r--, c--, count++)
-                {
-                    // iterate through
-                }
-                weight += weight_column(count);
-            }
+            if (count > 0)
+                std::cout << "up Left Count: " << count << std::endl;
+            weight += weight_column(count);
         }
-
+ 
         if (check_right)
         {
+            std::cout << "up right" << std::endl;
             grid_size_t count = 0;
-            for (grid_size_t c = column, count = 0; c < (column + offset) && (node.board.grid[row][c] == p); c++, count++)
+            for (grid_size_t r = row, c = column, count = 0; 
+                 (r < std::min(size, row + offset)) && (c < std::min(size, column + offset)) && (node.board.grid[r][c] == p); 
+                 r++, c++, count++)
             {
-                // iterate through
+                std::cout << "[ " << r << "," << c << "] ";
             }
-            weight += weight_column(count); 
-
-            if (check_up)
-            {
-                grid_size_t count = 0;
-                for (grid_size_t r = row, c = column, count = 0; 
-                     (r < (row + offset)) && (c < (column + offset)) && (node.board.grid[r][c] == p); 
-                     r++, c++, count++)
-                {
-                    // iterate through
-                }
-                weight += weight_column(count); 
-            }
-
-            if (check_down)
-            {
-                grid_size_t count = 0;
-                for (grid_size_t r = row, c = column, count = 0; 
-                     (r >= (row - offset + 1)) && (c < (column + offset)) && (node.board.grid[r][c] == p); 
-                     r--, c++, count++)
-                {
-                    // iterate through
-                }
-                weight += weight_column(count);
-            }  
+            if (count > 0)
+                std::cout << "Up Right Count: " << count << std::endl;
+            weight += weight_column(count);
         }
 
+        std::cout << "Evaluated Weight: " << weight << std::endl; 
         return weight;
     }
 

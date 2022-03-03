@@ -172,9 +172,19 @@ namespace ConnectN
         }
 
         bool check_up = (row < (this->size() - target)),
-            check_down = (row > target),
             check_left = (column > target-1), 
             check_right = (column < (this->size() - target));
+
+        if (check_right)
+        {
+            for (grid_size_t c = column, count = 0; c < (column + offset) && (this->grid[row][c] == p); c++, count++)
+            {
+                if (count == target)
+                {
+                    return p;
+                }
+            }
+        }
 
         if (check_up)
         {
@@ -185,29 +195,8 @@ namespace ConnectN
                     return p;
                 }
             }
-        }
 
-        if (check_down)
-        {
-            for (grid_size_t r = row, count = 0; r < (row - offset + 1) && (this->grid[r][column] == p); r--, count++)
-            {
-                if (count == target)
-                {
-                    return p;
-                }
-            }
-        }
-
-        if (check_left)
-        {
-            for (grid_size_t c = column, count = 0; c > (column - offset) && (this->grid[row][c] == p); c--, count++)
-            {
-                if (count == target)
-                {
-                    return p;
-                }
-            }
-            if (check_up)
+            if (check_left)
             {
                 for (grid_size_t r = row, c = column, count = 0; 
                      (r < (row + offset)) && (c >= (column - target)) && (this->grid[r][c] == p); 
@@ -219,31 +208,8 @@ namespace ConnectN
                     }
                 }
             }
-            if (check_down)
-            {
-                for (grid_size_t r = row, c = column, count = 0; 
-                     (r > (row - offset + 1)) && (c > (column - offset)) && (this->grid[r][c] == p); 
-                     r--, c--, count++)
-                {
-                    if (count == target)
-                    {
-                        return p;
-                    }
-                }
-            }
-        }
 
-        if (check_right)
-        {
-            for (grid_size_t c = column, count = 0; c < (column + offset) && (this->grid[row][c] == p); c++, count++)
-            {
-                if (count == target)
-                {
-                    return p;
-                }
-            }
-
-            if (check_up)
+            if (check_right)
             {
                 for (grid_size_t r = row, c = column, count = 0; 
                      (r < (row + offset)) && (c < (column + offset)) && (this->grid[r][c] == p); 
@@ -255,19 +221,6 @@ namespace ConnectN
                     }
                 }
             }
-
-            if (check_down)
-            {      
-                for (grid_size_t r = row, c = column, count = 0; 
-                     (r >= (row - offset + 1)) && (c < (column + offset)) && (this->grid[r][c] == p); 
-                     r--, c++, count++)
-                {
-                    if (count == target)
-                    {
-                        return p;
-                    }
-                }
-            }  
         }
         return NONE;
     }
