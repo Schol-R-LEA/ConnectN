@@ -63,7 +63,6 @@ namespace ConnectN
     Node Solver::negamax(Node node, Depth depth, Weight alpha, Weight beta, Weight color)
     {
 
-        std::cout << "depth " << static_cast<int>(node.depth) << " or " << static_cast<int>(depth) << std::endl;
         if (depth == 0 || board.win() == COMPUTER)
         {
             return (Node {node.board, node.column, color * node.weight, depth});
@@ -75,12 +74,9 @@ namespace ConnectN
 
         for (auto child : children)
         {
+            value.column = child.column;
             Node recursive_value = negamax(child, depth - 1, -beta, -alpha, -color);
             value.weight = std::max(value.weight, -recursive_value.weight);
-            if (value.weight == child.weight)
-            {
-                value.column = child.column;
-            }
             alpha = std::max(value.weight, alpha);
             if (alpha >= beta)
             {
@@ -163,7 +159,6 @@ namespace ConnectN
         }
         
         weight += evaluate_node(node);
-        std::cout << "Total weight " << weight << std::endl;
         return weight;
     }
 
@@ -187,8 +182,7 @@ namespace ConnectN
             // for every token beyond half the winning amount,
             // increase the weighting by 2
             Weight weighted_count = c - midpoint;
-            std::cout << "Midpoint " << midpoint << ", Weighted count " << weighted_count << std::endl;
-            weight = std::max(0, static_cast<int>(weighted_count+1)) * 2; 
+            weight = std::max(0, static_cast<int>(weighted_count+1)) * 2;
         }
 
         return weight;
@@ -210,20 +204,16 @@ namespace ConnectN
             row = std::max(0, node.board.column_top(node.column) - 1),
             column = node.column;
 
-        std::cout << "depth " << static_cast<int>(node.depth) << std::endl;
-
         bool check_up = (row < (size - target)),
             check_left = (column > offset), 
             check_right = (column < (size - offset));
 
-        std::cout << player_name(p) << std::endl;
         if (check_right)
         {
             grid_size_t count = 1;
             for (grid_size_t c = column; c < std::min(size, column + offset) && (node.board.grid[row][c] == p); c++, count++)
             {
                 // iterate through
-                std::cout << c << " ";
             }
             weight += weight_column(count); 
         }
@@ -235,7 +225,6 @@ namespace ConnectN
             for (grid_size_t r = row; (r < std::min(size, row + offset)) && (node.board.grid[r][column] == p); r++, count++)
             {
                 // iterate through
-                std::cout << r << " ";
             }
             weight += weight_column(count);
         }
@@ -248,7 +237,6 @@ namespace ConnectN
                  r++, c--, count++)
             {
                 // iterate through
-                std::cout << "[" << r << "," << c << "]";
             }
             weight += weight_column(count);
         }
@@ -260,12 +248,11 @@ namespace ConnectN
                  (r < std::min(size, row + offset)) && (c < std::min(size, column + offset)) && (node.board.grid[r][c] == p); 
                  r++, c++, count++)
             {
-                std::cout << "[" << r << "," << c << "] ";
+                // iterate through
             }
             weight += weight_column(count);
         }
-
-        std::cout << "Evaluated Weight: " << weight << std::endl; 
+ 
         return weight;
     }
 
