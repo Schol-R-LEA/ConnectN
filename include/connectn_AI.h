@@ -16,7 +16,8 @@ namespace ConnectN
         Board board;
         grid_size_t column;
         Weight weight;
-        Node(const Board& b, grid_size_t c, Weight w): board(b), column(c), weight(w) {};
+        Depth depth;
+        Node(const Board& b, grid_size_t c, Weight w, Depth d): board(b), column(c), weight(w), depth(d) {};
         Node(const Node& n);
         void operator=(const Node& n);
     }; 
