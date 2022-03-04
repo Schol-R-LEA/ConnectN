@@ -7,6 +7,11 @@
 
 namespace ConnectN
 {
+
+    /**
+     * 
+     *
+     */
     Node::Node(const Node& n)
     {
         this->board = n.board;
@@ -14,6 +19,11 @@ namespace ConnectN
         this->weight = n.weight;
     }
 
+
+    /**
+     * 
+     *
+     */
     void Node::operator=(const Node& n)
     {
         this->board = n.board;
@@ -26,7 +36,7 @@ namespace ConnectN
      * 
      *
      */
-    Solver::Solver(Board& b, Depth d): board(b), search_depth(d)
+    Solver::Solver(Board& b, Depth d = 3): board(b), search_depth(d)
     {
     
     }
@@ -125,7 +135,6 @@ namespace ConnectN
     Weight Solver::evaluate_move(Node& node)
     { 
         grid_size_t size = node.board.size();
-        // Player player = node.board.current_player();
         Weight weight = 0;
         grid_size_t column = node.column;
 
@@ -135,7 +144,7 @@ namespace ConnectN
         {
             if (node.column == std::ceil(size/2))
             {
-                weight += 10; 
+                weight += 4; 
             } 
         }
         else
@@ -144,7 +153,7 @@ namespace ConnectN
             // as you would if there is only one
             if (column == (size/2) || column == (size/2)+1)
             {
-                weight += 5; 
+                weight += 2; 
             }
         }
         
@@ -153,9 +162,7 @@ namespace ConnectN
     }
 
     /**
-     * Weight Solver::weight_column(Node& n)
-     * - scan the neighboring square of a given square to see if there 
-     *   is a winning sequence.
+     * Weight Solver::weight_column(grid_size_t c) - 
      * @param c - total number of 
      */
     Weight Solver::weight_column(grid_size_t c)
@@ -172,7 +179,7 @@ namespace ConnectN
         {
             // for every token beyond half the winning amount,
             // increase the weighting by 2 
-            weight = std::max(0, static_cast<int>((c - std::ceil(max/2)) * 2)); 
+            weight = std::max(0, static_cast<int>((c - std::floor(max/2)) * 2)); 
         }
 
         return weight;
@@ -190,14 +197,18 @@ namespace ConnectN
         Player p = node.board.current_player();
         grid_size_t size = node.board.size();    
         grid_size_t offset = node.board.winning_count, 
-            target = static_cast<grid_size_t>(node.board.winning_count-1),
-            row = node.board.column_height(node.column),
+            target = static_cast<grid_size_t>(node.board.winning_count - 1),
+            row = std::max(0, node.board.column_height(node.column) - 1),
             column = node.column;
 
         bool check_up = (row < (size - target)),
-            check_left = (column > target-1), 
-            check_right = (column < (size - target));
+            check_left = (column > offset), 
+            check_right = (column < (size - offset));
 
+        std::cout << "row " << row << " column " << column << std::endl;
+        std::cout << player_name(p) << std::endl;
+        std::cout << "Column top owned by " << player_name(node.board.grid[row][column]) << std::endl;
+        std::cout << ((node.board.grid[row][column] == p) ? "match" : "no match") << std::endl;
         if (check_right)
         {
             std::cout << "Right" << std::endl;
@@ -207,8 +218,7 @@ namespace ConnectN
                 // iterate through
                 std::cout << c << " ";
             }
-            if (count > 0)
-                std::cout << "Right Count:" << count << std::endl;
+            std::cout << "Right Count:" << count << std::endl;
             weight += weight_column(count); 
         }
 
@@ -216,13 +226,13 @@ namespace ConnectN
         {
             std::cout << "up" << std::endl;
             grid_size_t count = 0;
+
             for (grid_size_t r = row; (r < std::min(size, row + offset)) && (node.board.grid[r][column] == p); r++, count++)
             {
                 // iterate through
                 std::cout << r << " ";
             }
-            if (count > 0)
-                std::cout << "Up Count: " << count << std::endl;
+            std::cout << "Up Count: " << count << std::endl;
             weight += weight_column(count);
         }
 
@@ -235,10 +245,9 @@ namespace ConnectN
                  r++, c--, count++)
             {
                 // iterate through
-                std::cout << "[ " << r << "," << c << "]";
+                std::cout << "[" << r << "," << c << "]";
             }
-            if (count > 0)
-                std::cout << "up Left Count: " << count << std::endl;
+            std::cout << "up Left Count: " << count << std::endl;
             weight += weight_column(count);
         }
  
@@ -250,10 +259,9 @@ namespace ConnectN
                  (r < std::min(size, row + offset)) && (c < std::min(size, column + offset)) && (node.board.grid[r][c] == p); 
                  r++, c++, count++)
             {
-                std::cout << "[ " << r << "," << c << "] ";
+                std::cout << "[" << r << "," << c << "] ";
             }
-            if (count > 0)
-                std::cout << "Up Right Count: " << count << std::endl;
+            std::cout << "Up Right Count: " << count << std::endl;
             weight += weight_column(count);
         }
 

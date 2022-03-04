@@ -26,7 +26,7 @@ namespace ConnectN
         bool useAI = false;
 
         uint8_t height();
-        uint8_t column_height(grid_size_t column);
+        uint8_t column_top(grid_size_t column);
         void fill(Player player);
         Player scan_neighbors(grid_size_t row, grid_size_t column);
 

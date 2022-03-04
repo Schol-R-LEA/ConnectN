@@ -38,6 +38,8 @@ namespace ConnectN
                                                           winning_count(b.winning_count), 
                                                           player(b.player)
     {
+        this->useAI = b.useAI;
+
         for (grid_size_t r = 0; r < b.grid.size(); r++)
         {
             for (grid_size_t c = 0; c < b.grid.size(); c++)
@@ -61,7 +63,7 @@ namespace ConnectN
     /**
      * uint8_t Board::column_height() - highest column on the board
      */
-    uint8_t Board::column_height(grid_size_t column)
+    uint8_t Board::column_top(grid_size_t column)
     {
         grid_size_t row; 
         for (row = 0; (row < this->size()) && (this->grid[row][column] != NONE); row++)
@@ -69,7 +71,7 @@ namespace ConnectN
             // iterate through
         }
 
-        return row;
+        return row-1;
     }
 
 
