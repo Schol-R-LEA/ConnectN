@@ -1,26 +1,33 @@
 #include <iostream>
-#include "connectnboard.h"
+// #include "connectnboard.h"
 #include "connectn_AI.h"
 
 int main(int argc, char* argv[])
 {
-    ConnectN::grid_size_t board_size = 7, winning_count = 4;
+    ConnectN::Grid_Size board_size = 7, winning_count = 4;
     ConnectN::Player p = ConnectN::PLAYER1;
+    bool useAI = false;
     ConnectN::Depth depth = 4;
 
     switch (argc)
     {
-    case 5:
-        depth = std::stoi(argv[4]);
+    case 6:
+        depth = std::stoi(argv[5]);
         [[fallthrough]];
-    case 4:
-        if (std::stoi(argv[3]) == 2)
+    case 5:
+        if (std::stoi(argv[4]) == 2)
         {
             p = ConnectN::PLAYER2;
         }
-        if (std::stoi(argv[3]) == 3)
+        [[fallthrough]];
+    case 4:
+        if (std::stoi(argv[3]) == 1)
         {
-            p = ConnectN::COMPUTER;
+            useAI = true;
+            if (p == ConnectN::PLAYER2)
+              {
+                p = ConnectN::COMPUTER;
+              }
         }
         [[fallthrough]];
     case 3:
@@ -33,7 +40,7 @@ int main(int argc, char* argv[])
         break;
     }
 
-    ConnectN::Board board(board_size, winning_count, p);
+    ConnectN::Board board(board_size, winning_count, p, useAI);
     if (p == ConnectN::COMPUTER)
     {
         board.switch_player();
@@ -43,7 +50,7 @@ int main(int argc, char* argv[])
     ConnectN::Player winner = ConnectN::NONE;
     while(true)
     {
-        ConnectN::grid_size_t next_column = 0;
+        ConnectN::Grid_Size next_column = 0;
 
         if (board.current_player() == ConnectN::COMPUTER)
         {
@@ -53,7 +60,7 @@ int main(int argc, char* argv[])
         }
         else
         {
-            do 
+            do
             {
                 std::cout << ConnectN::player_name(board.current_player()) << " enter a column: ";
                 std::cin >> next_column;

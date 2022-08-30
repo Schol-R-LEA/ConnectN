@@ -14,10 +14,10 @@ namespace ConnectN
     struct Node
     {
         Board board;
-        grid_size_t column;
+        Grid_Size column;
         Weight weight;
         Depth depth;
-        Node(const Board& b, grid_size_t c, Weight w, Depth d): board(b), column(c), weight(w), depth(d) {};
+        Node(const Board& b, Grid_Size c, Weight w, Depth d): board(b), column(c), weight(w), depth(d) {};
         Node(const Node& n);
         void operator=(const Node& n);
     }; 
@@ -33,11 +33,11 @@ namespace ConnectN
         void order_moves(std::vector<Node>& children);
         Weight evaluate_move(Node& node);
         Weight evaluate_node(Node& node);
-        Weight weight_column(grid_size_t c);
+        Weight weight_column(Grid_Size c);
 
     public:
         Solver(Board& b, Depth d);
-        grid_size_t move();
+        Grid_Size move();
 
         friend class Board;
     };

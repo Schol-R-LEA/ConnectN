@@ -9,23 +9,25 @@ namespace ConnectN
     /**
      * Board::Board() - default constructor
      */
-    Board::Board(): grid(boost::extents[7][7]), winning_count(4), player(PLAYER1)
+    Board::Board(): grid(boost::extents[7][7]), winning_count(4), player(PLAYER1), useAI(false)
     {
         // classic Connect-4 grid
-        useAI = true;
         this->fill(NONE);
     }
 
 
     /**
-     * Board::Board(uint8_t gs, uint8_t wc, Player p) - standard c'tor
+     * Board::Board(uint8_t gs, uint8_t wc, Player p, bool ai) - standard c'tor
      * @param gs - grid size
      * @param wc - number of tokens need to win
      * @param p  - first player 
      */
-    Board::Board(uint8_t gs, uint8_t wc, Player p): grid(boost::extents[gs][gs]), winning_count(std::min(gs, wc)), player(p)
+    Board::Board(uint8_t gs, uint8_t wc, Player p, bool ai): 
+      grid(boost::extents[gs][gs]), 
+      winning_count(std::min(gs, wc)), 
+      player(p),
+      useAI(ai)
     {
-        useAI = (this->player == COMPUTER);
         this->fill(NONE);
     }
 
@@ -35,14 +37,13 @@ namespace ConnectN
      * @param b - Board objects to copy
      */
     Board::Board(const Board& b): grid(boost::extents[b.grid.size()][b.grid.size()]), 
-                                                          winning_count(b.winning_count), 
-                                                          player(b.player)
+                                  winning_count(b.winning_count), 
+                                  player(b.player),
+                                  useAI(b.useAI)
     {
-        this->useAI = b.useAI;
-
-        for (grid_size_t r = 0; r < b.grid.size(); r++)
+        for (Grid_Size r = 0; r < b.grid.size(); r++)
         {
-            for (grid_size_t c = 0; c < b.grid.size(); c++)
+            for (Grid_Size c = 0; c < b.grid.size(); c++)
             {
                 this->grid[r][c] = b.grid[r][c];
             }
@@ -51,9 +52,9 @@ namespace ConnectN
 
 
     /**
-     * grid_size_t Board::size() - dimensions of the board
+     * Grid_Size Board::size() - dimensions of the board
      */
-    grid_size_t Board::size()
+    Grid_Size Board::size()
     {
         return this->grid.size();
     }
@@ -63,9 +64,9 @@ namespace ConnectN
     /**
      * uint8_t Board::column_height() - highest column on the board
      */
-    uint8_t Board::column_top(grid_size_t column)
+    uint8_t Board::column_top(Grid_Size column)
     {
-        grid_size_t row; 
+        Grid_Size row; 
         for (row = 0; (row < this->size()) && (this->grid[row][column] != NONE); row++)
         {
             // iterate through
@@ -124,7 +125,7 @@ namespace ConnectN
     {
         if (column < this->size())
         {
-            for (grid_size_t row = 0; row < this->size(); row++)
+            for (Grid_Size row = 0; row < this->size(); row++)
             {
                 if (this->grid[row][column] == NONE)
                 {
@@ -142,9 +143,9 @@ namespace ConnectN
      */
     Player Board::win()
     {
-        for (grid_size_t row = 0; row < this->height(); row++)
+        for (Grid_Size row = 0; row < this->height(); row++)
         {
-            for (grid_size_t column = 0; column < this->size(); column++)
+            for (Grid_Size column = 0; column < this->size(); column++)
             {
                 Player p = this->scan_neighbors(row, column);
                 if (p != NONE)
@@ -158,16 +159,16 @@ namespace ConnectN
 
 
     /**
-     * Player Board::scan_neighbors(grid_size_t row, grid_size_t column)
+     * Player Board::scan_neighbors(Grid_Size row, Grid_Size column)
      * - scan the neighboring square of a given square to see if there 
      *   is a winning sequence.
      * @param row    - row of square to scan from
      * @param column - column of square to scan from
      */
-    Player Board::scan_neighbors(grid_size_t row, grid_size_t column)
+    Player Board::scan_neighbors(Grid_Size row, Grid_Size column)
     {
         Player p = this->grid[row][column];
-        grid_size_t offset = this->winning_count,  target = static_cast<grid_size_t>(this->winning_count-1);
+        Grid_Size offset = this->winning_count,  target = static_cast<Grid_Size>(this->winning_count-1);
         if (p == NONE)
         {
             return NONE;
@@ -179,7 +180,7 @@ namespace ConnectN
 
         if (check_right)
         {
-            for (grid_size_t c = column, count = 0; c < (column + offset) && (this->grid[row][c] == p); c++, count++)
+            for (Grid_Size c = column, count = 0; c < (column + offset) && (this->grid[row][c] == p); c++, count++)
             {
                 if (count == target)
                 {
@@ -190,7 +191,7 @@ namespace ConnectN
 
         if (check_up)
         {
-            for (grid_size_t r = row, count = 0; (r < (row + offset)) && (this->grid[r][column] == p); r++, count++)
+            for (Grid_Size r = row, count = 0; (r < (row + offset)) && (this->grid[r][column] == p); r++, count++)
             {
                 if (count == target)
                 {
@@ -200,7 +201,7 @@ namespace ConnectN
 
             if (check_left)
             {
-                for (grid_size_t r = row, c = column, count = 0; 
+                for (Grid_Size r = row, c = column, count = 0; 
                      (r < (row + offset)) && (c >= (column - target)) && (this->grid[r][c] == p); 
                      r++, c--, count++)
                 {
@@ -213,7 +214,7 @@ namespace ConnectN
 
             if (check_right)
             {
-                for (grid_size_t r = row, c = column, count = 0; 
+                for (Grid_Size r = row, c = column, count = 0; 
                      (r < (row + offset)) && (c < (column + offset)) && (this->grid[r][c] == p); 
                      r++, c++, count++)
                 {
@@ -234,9 +235,9 @@ namespace ConnectN
      */
     void Board::fill(Player player) 
     {
-        for (grid_size_t i = 0; i < this->grid.size(); i++)
+        for (Grid_Size i = 0; i < this->grid.size(); i++)
         {
-            for (grid_size_t j = 0; j < this->grid.size(); j++)
+            for (Grid_Size j = 0; j < this->grid.size(); j++)
             {
                 this->grid[i][j] = player;
             }
@@ -255,9 +256,9 @@ namespace ConnectN
 
         border.resize((b.grid.size() * 2)-1, '-');
         os << ' ' << border << std::endl;
-        for (grid_size_t r = b.grid.size(); r > 0; r--) 
+        for (Grid_Size r = b.grid.size(); r > 0; r--) 
         {
-            for (grid_size_t c = 0; c < b.grid.size(); c++) 
+            for (Grid_Size c = 0; c < b.grid.size(); c++) 
             {
                 os << "|";
                 switch (b.grid[r-1][c]) 
@@ -290,9 +291,9 @@ namespace ConnectN
      */
 void Board::operator=(const Board& b)
 {
-    for (grid_size_t r = 0; r < b.grid.size(); r++)
+    for (Grid_Size r = 0; r < b.grid.size(); r++)
     {
-        for (grid_size_t c = 0; c < b.grid.size(); c++)
+        for (Grid_Size c = 0; c < b.grid.size(); c++)
         {
             this->grid[r][c] = b.grid[r][c];
         }
