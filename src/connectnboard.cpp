@@ -23,8 +23,8 @@ namespace ConnectN
      * @param p  - first player 
      */
     Board::Board(uint8_t gs, uint8_t wc, Player p, bool ai): 
-      grid(boost::extents[gs][gs]), 
-      winning_count(std::min(gs, wc)), 
+      grid(boost::extents[gs][gs]),
+      winning_count(std::min(gs, wc)),
       player(p),
       useAI(ai)
     {
@@ -36,8 +36,8 @@ namespace ConnectN
      * Board::Board(const Board& b) - copy c'tor 
      * @param b - Board objects to copy
      */
-    Board::Board(const Board& b): grid(boost::extents[b.grid.size()][b.grid.size()]), 
-                                  winning_count(b.winning_count), 
+    Board::Board(const Board& b): grid(boost::extents[b.grid.size()][b.grid.size()]),
+                                  winning_count(b.winning_count),
                                   player(b.player),
                                   useAI(b.useAI)
     {
@@ -105,15 +105,16 @@ namespace ConnectN
 
 
     /**
-     * void Board::switch_player() - change the current player
+     * Player Board::switch_player() - change the current player
      */
-    void Board::switch_player()
+    Player Board::switch_player()
     {
         this->player = ((this->player == PLAYER1) 
-                        ? ((this->useAI) 
-                           ? COMPUTER 
+                        ? ((this->useAI)
+                           ? COMPUTER
                            : PLAYER2)
                         : PLAYER1);
+        return(this->player);
     }
 
 

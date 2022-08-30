@@ -15,6 +15,7 @@ namespace ConnectN
     typedef boost::multi_array_types::index Grid_Index;
     typedef boost::const_multi_array_ref<Player, 2, Player*>::size_type Grid_Size;
 
+
     std::string player_name(Player p);
 
     class Board
@@ -38,7 +39,7 @@ namespace ConnectN
         void operator=(const Board& b);
         Grid_Size size();
         bool add_at(uint8_t column);
-        void switch_player();
+        Player switch_player();
         Player current_player() {return this->player;}
         Player win();
 

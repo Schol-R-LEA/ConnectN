@@ -65,7 +65,8 @@ int main(int argc, char* argv[])
     ALLEGRO_BITMAP * marker[] = {
         al_load_bitmap("img/black_marker.png"),
         al_load_bitmap("img/red_marker.png"),
-        al_load_bitmap("img/black_marker.png")
+        al_load_bitmap("img/yellow_marker.png"),
+        al_load_bitmap("img/yellow_marker.png")
     };
 
     ConnectN::GUIBoard board(display, board_size, winning_count, p, useAI);
@@ -118,8 +119,10 @@ int main(int argc, char* argv[])
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
             {
                 al_draw_bitmap(marker[0], x - 50, y - 50, 0);
+                board.drop(x);
                 board.draw();
                 al_flip_display();
+                p = board.switch_player();
                 break;
             }
         }
