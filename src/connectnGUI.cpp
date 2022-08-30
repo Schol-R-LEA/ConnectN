@@ -62,7 +62,11 @@ int main(int argc, char* argv[])
 
     ALLEGRO_MOUSE_STATE mstate;
     al_get_mouse_state(&mstate);
-    ALLEGRO_BITMAP * player1_marker = al_load_bitmap("img/red_marker.png");
+    ALLEGRO_BITMAP * marker[] = {
+        al_load_bitmap("img/black_marker.png"),
+        al_load_bitmap("img/red_marker.png"),
+        al_load_bitmap("img/black_marker.png")
+    };
 
     ConnectN::GUIBoard board(display, board_size, winning_count, p, useAI);
     ConnectN::Solver AI(board, depth);
@@ -71,6 +75,9 @@ int main(int argc, char* argv[])
     board.draw();
     al_flip_display();
 
+    ALLEGRO_EVENT event;
+    al_wait_for_event(event_queue, &event);
+    uint32_t x = event.mouse.x, y = event.mouse.y;
 
     bool running = true;
     while (running)
@@ -82,16 +89,19 @@ int main(int argc, char* argv[])
         {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
             {
-                running = false;
+                running = false; 
                 break;
             }
+
             case ALLEGRO_EVENT_MOUSE_AXES:
             {
-                if (mstate.buttons & 1)
+                if (al_mouse_button_down(&mstate, 1))
                 {
+                    al_draw_bitmap(marker[0], x - 50, y - 50, 0);
                     board.draw();
-
-                    al_draw_bitmap(player1_marker, event.mouse.x, event.mouse.y, 0);
+                    x = event.mouse.x;
+                    y = event.mouse.y; 
+                    al_draw_bitmap(marker[p], event.mouse.x - 50, event.mouse.y - 50, 0);
                     al_flip_display();
                 }
                 break;
@@ -99,13 +109,17 @@ int main(int argc, char* argv[])
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
             {
                 board.draw();
-                al_draw_bitmap(player1_marker, event.mouse.x, event.mouse.y, 0);
+                x = event.mouse.x;
+                y = event.mouse.y;
+                al_draw_bitmap(marker[p], event.mouse.x - 50, event.mouse.y - 50, 0);
                 al_flip_display();
                 break;
             }
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
             {
-
+                al_draw_bitmap(marker[0], x - 50, y - 50, 0);
+                board.draw();
+                al_flip_display();
                 break;
             }
         }
