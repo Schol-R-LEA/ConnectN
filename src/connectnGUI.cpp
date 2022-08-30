@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
         {
             case ALLEGRO_EVENT_DISPLAY_CLOSE:
             {
-                running = false; 
+                running = false;
                 break;
             }
 
@@ -125,6 +125,19 @@ int main(int argc, char* argv[])
                 p = board.switch_player();
                 break;
             }
+        }
+        if (p == ConnectN::COMPUTER)
+        {
+            board.add_at(AI.move());
+            board.draw();
+            al_flip_display();
+            p = board.switch_player();
+        }
+        ConnectN::Player winner = board.win();
+        if (winner != ConnectN::NONE)
+        {
+            std::cout << ConnectN::player_name(winner) << " wins!"<< std::endl;
+            break;
         }
     }
 
