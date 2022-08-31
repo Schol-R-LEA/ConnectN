@@ -53,9 +53,7 @@ int main(int argc, char* argv[])
     display = al_create_display((100 * board_size) + 100, (100 * board_size) + 200);
     timer = al_create_timer(1.0 / 60.0);
     event_queue = al_create_event_queue();
-    al_install_keyboard();
     al_install_mouse();
-    al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_mouse_event_source());
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
@@ -80,7 +78,6 @@ int main(int argc, char* argv[])
 
     ALLEGRO_EVENT event;
     al_wait_for_event(event_queue, &event);
-    uint32_t x = event.mouse.x, y = event.mouse.y;
 
     bool running = true;
     while (running)
@@ -96,37 +93,30 @@ int main(int argc, char* argv[])
 
             // case ALLEGRO_EVENT_TIMER:
             // {
+            //     al_clear_to_color(al_map_rgba(0, 0, 0, 0));
             //     board.draw();
+            //     al_get_mouse_state(&mstate);
+            //     if (al_mouse_button_down(&mstate, 1))
+            //     {
+            //         al_draw_bitmap(marker[p], event.mouse.x - board.token_midpoint(), event.mouse.y - board.token_midpoint(), 0);
+            //     }
             //     al_flip_display();
             //     break;
             // }
 
-            case ALLEGRO_EVENT_MOUSE_AXES:
-            {
-                if (al_mouse_button_down(&mstate, 1))
-                {
-                    al_draw_bitmap(marker[0], x - board.token_midpoint(), y - board.token_midpoint(), 0);
-                    board.draw();
-                    al_draw_bitmap(marker[p], event.mouse.x - board.token_midpoint(), event.mouse.y - board.token_midpoint(), 0);
-                    al_flip_display();
-                }
-                x = event.mouse.x;
-                y = event.mouse.y;
-                break;
-            }
             case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
             {
+                al_clear_to_color(al_map_rgba(0, 0, 0, 0));
                 board.draw();
-                x = event.mouse.x;
-                y = event.mouse.y;
-                al_draw_bitmap(marker[p], x - board.token_midpoint(), y - board.token_midpoint(), 0);
+                al_draw_bitmap(marker[p], event.mouse.x - board.token_midpoint(), event.mouse.y - board.token_midpoint(), 0);
                 al_flip_display();
                 break;
             }
+
             case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
             {
-                al_draw_bitmap(marker[0], x - board.token_midpoint(), y - board.token_midpoint(), 0);
-                board.drop(x);
+                al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+                board.drop(event.mouse.x);
                 board.draw();
                 al_flip_display();
                 p = board.switch_player();
