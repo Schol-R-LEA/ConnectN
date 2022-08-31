@@ -34,8 +34,19 @@ namespace ConnectN
                                      yellow_marker(al_load_bitmap("img/yellow_marker.png"))
         {};
 
+
+        ~GUIBoard()
+        {
+            al_destroy_bitmap(board_cell);
+            al_destroy_bitmap(red_marker);
+            al_destroy_bitmap(yellow_marker);
+        };
+
         void draw();
         void drop(Grid_Size x);
+
+        uint32_t token_size() {return 100;};
+        uint32_t token_midpoint() {return token_size() / 2;};
 
         friend class Solver;
     };

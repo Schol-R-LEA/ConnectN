@@ -15,14 +15,14 @@ namespace ConnectN
             {
                 if (this->grid[i][j] == PLAYER1)
                 {
-                    al_draw_bitmap(this->red_marker, (j * 100),  (this->size() * 100) - (i * 100), 0);
+                    al_draw_bitmap(this->red_marker, (j * this->token_size()),  (this->size() * this->token_size()) - (i * this->token_size()), 0);
                 }
                 else if (this->grid[i][j] == PLAYER2 || this->grid[i][j] == COMPUTER)
                 {
-                    al_draw_bitmap(this->yellow_marker, (j * 100), (this->size() * 100) - (i * 100), 0);
+                    al_draw_bitmap(this->yellow_marker, (j * this->token_size()), (this->size() * this->token_size()) - (i * this->token_size()), 0);
                 }
 
-                al_draw_bitmap(this->board_cell, (i * 100), (j+1) * 100, 0);
+                al_draw_bitmap(this->board_cell, (i * this->token_size()), (j+1) * this->token_size(), 0);
             }
         }
     }
@@ -30,7 +30,7 @@ namespace ConnectN
 
     void GUIBoard::drop(Grid_Size x)
     {
-        Grid_Size column = ((x / 100) >= this->grid.size()) ? this->grid.size() - 1 : x / 100;
+        Grid_Size column = ((x / this->token_size()) >= this->grid.size()) ? this->grid.size() - 1 : x / this->token_size();
 
         this->add_at(column);
     }
